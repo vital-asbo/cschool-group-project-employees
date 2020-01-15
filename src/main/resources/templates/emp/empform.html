@@ -11,11 +11,16 @@
 <div class="container">
     <h2>Employee Form</h2>
     <div class="form-group">
-        <form action="#" class="form-group" th:action="@{/save_emp}" th:object="${emp}" method="post">
-            <input type="hidden" th:field="*{id}">
-            <input type="text" class="form-control" th:field="*{name}" placeholder="Name"><br>
-            <input type="text" class="form-control" th:field="*{salary}" placeholder="Salary"><br>
-            <input type="text" class="form-control" th:field="*{designation}" placeholder="Designation"><br>
+        <form action="#" class="form-group" th:action="@{/save_emp}" th:object="${employees}" method="post">
+            <input type="hidden" th:field="*{ID}">
+            <input type="text" class="form-control" th:field="*{FirstName}" placeholder="First Name"><br>
+            <input type="text" class="form-control" th:field="*{LastName}" placeholder="Last Name"><br>
+            <input type="text" class="form-control" th:field="*{Address}" placeholder="Address"><br>
+            <input type="text" class="form-control" th:field="*{Salary}" placeholder="Salary"><br>
+            <input type="text" class="form-control" th:field="*{Age}" placeholder="Age"><br>
+            <input type="text" class="form-control" th:field="*{StartJobDate}" placeholder="StartJobDate"><br>
+            <input type="text" class="form-control" th:field="*{Benefit}" placeholder="Benefit"><br>
+            <input type="text" class="form-control" th:field="*{Email}" placeholder="Email"><br>
             <input type="submit" class="btn btn-danger">
         </form>
         <hr>

@@ -21,6 +21,9 @@ public class EmployeeDao {
         }
     }
 
+
+
+
     public List<Employees> getEmployees() {
         try (Session session = HibernateConfig.getSessionFactory().openSession()) {
             return session.createQuery("from Employees", Employees.class).list();

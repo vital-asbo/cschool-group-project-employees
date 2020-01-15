@@ -19,27 +19,39 @@
         <table class="table table-striped">
             <thead>
             <tr>
-                <th>id</th>
-                <th>Name</th>
+                <th>ID</th>
+                <th>FirstName</th>
+                <th>LastName</th>
+                <th>Address</th>
+                <th>City</th>
                 <th>Salary</th>
-                <th>Designation</th>
+                <th>Age</th>
+                <th>StartJobDate</th>d
+                <th>Benefit</th>d
+                <th>Email</th>d
                 <th>Action</th>
             </tr>
             </thead>
             <tbody>
-            <tr class="result" data-th-each="emp : ${list}">
-                <td th:text="${emp.id}"></td>
-                <td th:text="${emp.name}"></td>
-                <td th:text="${emp.salary}"></td>
-                <td th:text="${emp.designation}"></td>
+            <tr class="result" data-th-each="employees : ${list}">
+                <td th:text="${employees.ID}"></td>
+                <td th:text="${employees.FirstName}"></td>
+                <td th:text="${employees.LastName}"></td>
+                <td th:text="${employees.Address}"></td>
+                <td th:text="${employees.City}"></td>
+                <td th:text="${employees.Salary}"></td>
+                <td th:text="${employees.Age}"></td>
+                <td th:text="${employees.StartJobDate}"></td>
+                <td th:text="${employees.Benefit}"></td>
+                <td th:text="${employees.Email}"></td>
 
                 <td class="action-td">
                     <form method="post" class="padding5px" th:action="#" th:action="@{/delete_emp}">
-                        <input type="hidden" th:name="emp_id" th:value="${emp.id}">
+                        <input type="hidden" th:name="emp_id" th:value="${employees.id}">
                         <input type="submit" class="btn btn-danger"  value="Delete" >
                     </form>
                     <form method="post" class="padding5px" action="#" th:action="@{/edit_emp}">
-                        <input type="hidden" th:name="emp_id" th:value="${emp.id}">
+                        <input type="hidden" th:name="emp_id" th:value="${employees.id}">
                         <input type="submit" class="btn btn-warning"  value="Edit">
                     </form>
                 </td>
