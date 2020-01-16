@@ -53,6 +53,7 @@ public class Employees {
     @Column(name = "StartJobDate")
     @DateTimeFormat(pattern = "dd-MM-yyyy")
     @Getter @Setter
+    @NonNull
     private Date startJobDate;
 
     @Column(name = "Benefit")

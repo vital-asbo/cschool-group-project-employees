@@ -16,7 +16,7 @@ public class EmpLombok {
     private int Salary;
     private int Age;
     private Date StartJobDate;
-    private int Benefit,
+    private int Benefit;
     private String Email;
 
     private EmpLombok(){}

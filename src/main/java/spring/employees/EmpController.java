@@ -17,11 +17,11 @@ public class EmpController {
     private List<Employees> list;
 
     public EmpController() {
-        list = new ArrayList<>();
-        list.add(new Employees(1, "Janek","Kowalski","Zamiejska 12", "Warszawa", 12000,32,new Date("12-03-2015"),6, "j.kowalski@o2.pl"));
-//        list.add(new Employees(2, "Zosia", 9000, "Makowiec"));
-//        list.add(new Employees(3, "Marek", 10000, "Warszawa"));
-//        list.add(new Employees(4, "Krysytna", 13000, "Ryzowice"));
+//        list = new ArrayList<>();
+//        list.add(new Employees ("Janek", "Kowalski","Zamiejska 12", "Warszawa",12000,32,new Date("12-05-2014"),4,"m.k@wp.pl"));
+////        list.add(new Employees(2, "Zosia", 9000, "Makowiec"));
+////        list.add(new Employees(3, "Marek", 10000, "Warszawa"));
+////        list.add(new Employees(4, "Krysytna", 13000, "Ryzowice"));
     }
 
     EmployeeDao employeeDao = new EmployeeDao();
@@ -31,10 +31,12 @@ public class EmpController {
         return "emp/index";
     }
 
+
     @RequestMapping(value = "/empform", method = RequestMethod.GET)
-    public String showform(Model model) {
-        model.addAttribute("employees", new Employees());
-        return "emp/empform";
+    public ModelAndView showform(Model model) {
+//        model.addAttribute("employees", new Employees ());
+        return new ModelAndView("emp/empform", "employees", new Employees());
+
     }
 
     @RequestMapping(value = "/save_emp")
@@ -45,31 +47,33 @@ public class EmpController {
 //            employees.setId(list.size() + 1);
 //            list.add(employees);
         } else {
-            Employees employees1 = getEmployeesById(employees.getId());
-            employees1.setFirstName(employees.getFirstName());
-            employees1.setLastName(employees.getLastName());
-            employees1.setAddress(employees.getAddress());
-            employees1.setCity(employees.getCity());
-            employees1.setAge(employees.getAge());
-            employees1.setSalary(employees.getSalary());
-            employees1.setStartJobDate(employees.getStartJobDate());
-            employees1.setEmail(employees.getEmail());
-            employees1.setBenefit(employees.getBenefit());
+            employeeDao.updateEmployee(employees);
+
         }
         return new ModelAndView("redirect:/viewemp");
     }
 
-    @RequestMapping(value = "/delete_emp", method = RequestMethod.POST)
+
+
+//    @RequestMapping(value = "/delete_emp", method = RequestMethod.POST)
+    @RequestMapping(value = "/delete_emp")
     public ModelAndView delete(@RequestParam(value = "emp_id") String emp_id) {
         list.remove(getEmployeesById(Integer.parseInt(emp_id)));
         return new ModelAndView("redirect:/viewemp");
     }
 
-    @RequestMapping(value = "/edit_emp", method = RequestMethod.POST)
-    public ModelAndView edit(@RequestParam(value = "emp_id") String emp_id) {
-        Employees employees = getEmployeesById(Integer.parseInt(emp_id));
+//    @RequestMapping(value = "/edit_emp", method = RequestMethod.POST)
+    @RequestMapping(value = "/edit_emp")
+    public ModelAndView edit(@RequestParam(value = "employees.id") String id) {
+        int i= Integer.parseInt(id);
+        Employees employees = new Employees();
+        EmpController empController= new EmpController();
+        employees = empController.getEmployeesById(i);
+
         return new ModelAndView("emp/empform", "employees", employees);
     }
+
+
 
     @RequestMapping(value = "/test", method = RequestMethod.POST)
     public ModelAndView test() {
@@ -79,10 +83,14 @@ public class EmpController {
 
     @RequestMapping("/viewemp")
     public ModelAndView viewemp(Model model) {
-        return new ModelAndView("emp/viewemp", "list", list);
+       List <Employees>  list1 = new ArrayList<>();
+        list1 = employeeDao.getEmployees();
+        return new ModelAndView("emp/viewemp", "list", list1);
     }
 
     private Employees getEmployeesById(@RequestParam int id) {
-        return list.stream().filter(f -> f.getId() == id).findFirst().get();
+        List<Employees> listEmp = new ArrayList<>();
+        listEmp = employeeDao.getEmployees();
+        return listEmp.stream().filter(f -> f.getId() == id).findFirst().get();
     }
 }
