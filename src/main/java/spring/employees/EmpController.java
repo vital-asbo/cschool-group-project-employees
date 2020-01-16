@@ -58,13 +58,19 @@ public class EmpController {
 //    @RequestMapping(value = "/delete_emp", method = RequestMethod.POST)
     @RequestMapping(value = "/delete_emp")
     public ModelAndView delete(@RequestParam(value = "emp_id") String emp_id) {
-        list.remove(getEmployeesById(Integer.parseInt(emp_id)));
+//        list.remove(getEmployeesById(Integer.parseInt(emp_id)));
+        int i= Integer.parseInt(emp_id);
+        Employees employees = new Employees();
+        EmpController empController= new EmpController();
+        employees = empController.getEmployeesById(i);
+        empController.employeeDao.deleteEmployee(employees);
+
         return new ModelAndView("redirect:/viewemp");
     }
 
 //    @RequestMapping(value = "/edit_emp", method = RequestMethod.POST)
     @RequestMapping(value = "/edit_emp")
-    public ModelAndView edit(@RequestParam(value = "employees.id") String id) {
+    public ModelAndView edit(@RequestParam(value = "emp_id") String id) {
         int i= Integer.parseInt(id);
         Employees employees = new Employees();
         EmpController empController= new EmpController();

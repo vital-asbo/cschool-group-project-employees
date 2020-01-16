@@ -22,25 +22,26 @@ public class EmployeeDao {
     }
 
 
-//    * Method to UPDATE salary for an employee */
-//    public void updateEmployee(Integer EmployeeID, int salary ){
-//        Session session = factory.openSession();
-//        Transaction tx = null;
-//        try{
-//            tx = session.beginTransaction();
-//            Employee employee =
-//                    (Employee)session.get(Employee.class, EmployeeID);
-//            employee.setSalary( salary );
-//            session.update(employee);
-//            tx.commit();
-//        }catch (HibernateException e) {
-//            if (tx!=null) tx.rollback();
-//            e.printStackTrace();
-//        }finally {
-//            session.close();
-//        }
-//    }
-// public void updateEmployee(Integer EmployeeID, Employees employees ){
+
+
+    public void deleteEmployee( Employees employees ){
+        Transaction transaction = null;
+        try (Session session = HibernateConfig.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+
+            Employees employee =
+                    (Employees)session.get(Employees.class, employees.getId());
+            session.delete(employee);
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        }
+    }
+
+
 
     public void updateEmployee( Employees employees ){
         Transaction transaction = null;
