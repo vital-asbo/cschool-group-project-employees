@@ -18,7 +18,7 @@ public class MainHibernate {
         employeeToUpdate.setSalary(9999);
 
 //        employeeDao.updateEmployees(employeeToUpdate);
-        employeeDao.updateEmployee(employeeToUpdate);
+        employeeDao.updateEmployees(employeeToUpdate);
         employeesList.forEach(System.out::println);
     }
 }

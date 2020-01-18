@@ -47,7 +47,7 @@ public class EmpController {
 //            employees.setId(list.size() + 1);
 //            list.add(employees);
         } else {
-            employeeDao.updateEmployee(employees);
+            employeeDao.updateEmployees(employees);
 
         }
         return new ModelAndView("redirect:/viewemp");
