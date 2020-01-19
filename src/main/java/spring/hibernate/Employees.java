@@ -1,11 +1,13 @@
 package spring.hibernate;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.util.Date;
-import java.util.Set;
 
 @Entity
 @Table(name = "Employees")
@@ -53,7 +55,6 @@ public class Employees {
     private int benefit;
 
     @Column(name = "Email")
-    @Getter @Setter
     private String email;
 
     public Employees(){}
