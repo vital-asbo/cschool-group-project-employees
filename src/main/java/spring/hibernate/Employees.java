@@ -46,8 +46,8 @@ public class Employees {
     private int age;
 
     @Column(name = "StartJobDate")
-    @NonNull
     @DateTimeFormat(pattern = "dd-MM-yyyy")
+    @NonNull
     private Date startJobDate;
 
     @Column(name = "Benefit")
@@ -55,8 +55,11 @@ public class Employees {
     private int benefit;
 
     @Column(name = "Email")
+    @NonNull
     private String email;
 
-    public Employees(){}
+    public Employees() {
+    }
+
 
 }
