@@ -11,11 +11,26 @@
 <div class="container">
     <h2>Employee Form</h2>
     <div class="form-group">
-        <form action="#" class="form-group" th:action="@{/save_emp}" th:object="${emp}" method="post">
+        <form action="#" class="form-group" th:action="@{/save_emp}" th:object="${employees}" method="post">
             <input type="hidden" th:field="*{id}">
-            <input type="text" class="form-control" th:field="*{name}" placeholder="Name"><br>
+            <h4>First Name</h4>
+            <input type="text" class="form-control" th:field="*{firstName}" placeholder="First Name"><br>
+            <h4>Last Name</h4>
+            <input type="text" class="form-control" th:field="*{lastName}" placeholder="Last Name"><br>
+            <h4>Address</h4>
+            <input type="text" class="form-control" th:field="*{address}" placeholder="Address"><br>
+            <h4>City</h4>
+            <input type="text" class="form-control" th:field="*{city}" placeholder="City"><br>
+            <h4>Salary</h4>
             <input type="text" class="form-control" th:field="*{salary}" placeholder="Salary"><br>
-            <input type="text" class="form-control" th:field="*{designation}" placeholder="Designation"><br>
+            <h4>Age</h4>
+            <input type="text" class="form-control" th:field="*{age}" placeholder="Age"><br>
+            <h4>Start job date - format: DD-MM-YYYY</h4>
+            <input type="text" class="form-control" th:field="*{startJobDate}" placeholder="StartJobDate"><br>
+            <h4>Benefit</h4>
+            <input type="text" class="form-control" th:field="*{benefit}" placeholder="Benefit"><br>
+            <h4>Email</h4>
+            <input type="text" class="form-control" th:field="*{email}" placeholder="Email"><br>
             <input type="submit" class="btn btn-danger">
         </form>
         <hr>

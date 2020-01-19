@@ -2,61 +2,85 @@ package spring.employees;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+import spring.hibernate.EmployeeDao;
+import spring.hibernate.Employees;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Controller
 public class EmpController {
-    private List<Emp> list;
+    private List<Employees> list;
 
     public EmpController() {
-        list = new ArrayList<>();
-        list.add(new Emp(1, "Janek", 120000, "Radom"));
-        list.add(new Emp(2, "Zosia", 9000, "Makowiec"));
-        list.add(new Emp(3, "Marek", 10000, "Warszawa"));
-        list.add(new Emp(4, "Krysytna", 13000, "Ryzowice"));
+//        list = new ArrayList<>();
+//        list.add(new Employees ("Janek", "Kowalski","Zamiejska 12", "Warszawa",12000,32,new Date("12-05-2014"),4,"m.k@wp.pl"));
+////        list.add(new Employees(2, "Zosia", 9000, "Makowiec"));
+////        list.add(new Employees(3, "Marek", 10000, "Warszawa"));
+////        list.add(new Employees(4, "Krysytna", 13000, "Ryzowice"));
     }
+
+    EmployeeDao employeeDao = new EmployeeDao();
 
     @RequestMapping("/")
     public String indexGet() {
         return "emp/index";
     }
 
+
     @RequestMapping(value = "/empform", method = RequestMethod.GET)
-    public String showform(Model model) {
-        model.addAttribute("emp", new Emp());
-        return "emp/empform";
+    public ModelAndView showform(Model model) {
+//        model.addAttribute("employees", new Employees ());
+        return new ModelAndView("emp/empform", "employees", new Employees());
+
     }
 
     @RequestMapping(value = "/save_emp")
-    public ModelAndView save(@ModelAttribute(value = "emp") Emp emp) {
-        if (emp.getId() == 0) {
+    public ModelAndView save(@ModelAttribute(value = "employees") Employees employees) {
+        if (employees.getId() == 0) {
             System.out.println("Adding a new emp");
-            emp.setId(list.size() + 1);
-            list.add(emp);
+            employeeDao.saveEmployee(employees);
+//            employees.setId(list.size() + 1);
+//            list.add(employees);
         } else {
-            Emp empTemp = getEmployeesById(emp.getId());
-            empTemp.setName(emp.getName());
-            empTemp.setSalary(emp.getSalary());
-            empTemp.setDesignation(emp.getDesignation());
+            employeeDao.updateEmployees(employees);
+
         }
         return new ModelAndView("redirect:/viewemp");
     }
 
-    @RequestMapping(value = "/delete_emp", method = RequestMethod.POST)
+
+
+//    @RequestMapping(value = "/delete_emp", method = RequestMethod.POST)
+    @RequestMapping(value = "/delete_emp")
     public ModelAndView delete(@RequestParam(value = "emp_id") String emp_id) {
-        list.remove(getEmployeesById(Integer.parseInt(emp_id)));
+//        list.remove(getEmployeesById(Integer.parseInt(emp_id)));
+        int i= Integer.parseInt(emp_id);
+        Employees employees = new Employees();
+        EmpController empController= new EmpController();
+        employees = empController.getEmployeesById(i);
+        empController.employeeDao.deleteEmployee(employees);
+
         return new ModelAndView("redirect:/viewemp");
     }
 
-    @RequestMapping(value = "/edit_emp", method = RequestMethod.POST)
-    public ModelAndView edit(@RequestParam(value = "emp_id") String emp_id) {
-        Emp emp = getEmployeesById(Integer.parseInt(emp_id));
-        return new ModelAndView("emp/empform", "emp", emp);
+//    @RequestMapping(value = "/edit_emp", method = RequestMethod.POST)
+    @RequestMapping(value = "/edit_emp")
+    public ModelAndView edit(@RequestParam(value = "emp_id") String id) {
+        int i= Integer.parseInt(id);
+        Employees employees = new Employees();
+        EmpController empController= new EmpController();
+        employees = empController.getEmployeesById(i);
+
+        return new ModelAndView("emp/empform", "employees", employees);
     }
+
+
 
     @RequestMapping(value = "/test", method = RequestMethod.POST)
     public ModelAndView test() {
@@ -66,10 +90,14 @@ public class EmpController {
 
     @RequestMapping("/viewemp")
     public ModelAndView viewemp(Model model) {
-        return new ModelAndView("emp/viewemp", "list", list);
+       List <Employees>  list1 = new ArrayList<>();
+        list1 = employeeDao.getEmployees();
+        return new ModelAndView("emp/viewemp", "list", list1);
     }
 
-    private Emp getEmployeesById(@RequestParam int id) {
-        return list.stream().filter(f -> f.getId() == id).findFirst().get();
+    private Employees getEmployeesById(@RequestParam int id) {
+        List<Employees> listEmp = new ArrayList<>();
+        listEmp = employeeDao.getEmployees();
+        return listEmp.stream().filter(f -> f.getId() == id).findFirst().get();
     }
 }
