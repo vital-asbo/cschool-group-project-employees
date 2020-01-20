@@ -18,8 +18,6 @@ public class HibernateConfig {
                 Configuration configuration = new Configuration();
                 Properties settings = new Properties();
                 settings.put(Environment.DRIVER, "com.microsoft.sqlserver.jdbc.SQLServerDriver");
-//                "jdbc:sqlserver://localhost\\SQLEXPRESS;databaseName=employes;integratedSecurity=true;");
-//                settings.put(Environment.URL, "jdbc:sqlserver://localhost\\SQLEXPRESS;databaseName=week10;integratedSecurity=true;");
                 settings.put(Environment.URL, "jdbc:sqlserver://localhost\\SQLEXPRESS;databaseName=EmployeesDB;integratedSecurity=true;");
                 settings.put(Environment.DIALECT, "org.hibernate.dialect.SQLServerDialect");
                 settings.put(Environment.SHOW_SQL, "true");

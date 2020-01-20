@@ -2,7 +2,6 @@ package spring.employees;
 
 import javafx.scene.input.DataFormat;
 
-import java.util.Date;
 import java.util.Objects;
 
 public class Emp {
