@@ -7,15 +7,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
-import spring.hibernate.EmployeeDao;
-import spring.hibernate.Employees;
+import spring.hibernate.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Controller
 public class EmpController {
-    private List<Employees> list;
+    private List<Employees> listEmployees;
+    private List<Cars> listCars;
+    private HibernateDao hibernateDao;
 
     public EmpController() {
 //        list = new ArrayList<>();
@@ -23,9 +24,19 @@ public class EmpController {
 ////        list.add(new Employees(2, "Zosia", 9000, "Makowiec"));
 ////        list.add(new Employees(3, "Marek", 10000, "Warszawa"));
 ////        list.add(new Employees(4, "Krysytna", 13000, "Ryzowice"));
+        try {
+            hibernateDao = new HibernateDao();
+            DateSource.supplyDB();
+            listEmployees= hibernateDao.get(Employees.class);
+            listCars= hibernateDao.get(Cars.class);
+        } catch(NullPointerException ex){
+            System.out.println("Brak połączenia z bazą danych");
+            ex.getMessage();
+            listEmployees = new ArrayList<>();
+        }
     }
 
-    EmployeeDao employeeDao = new EmployeeDao();
+//    HibernateDao hibernateDao = new HibernateDao();
 
     @RequestMapping("/")
     public String indexGet() {
@@ -40,20 +51,47 @@ public class EmpController {
 
     }
 
+    @RequestMapping(value = "/carform", method = RequestMethod.GET)
+    public ModelAndView showform1(Model model) {
+//        model.addAttribute("employees", new Employees ());
+        ModelAndView modelAndView = new ModelAndView();
+        List<Employees> list2 = hibernateDao.getEmployees();
+        modelAndView.addObject("employeesList", list2);
+        modelAndView.addObject( "cars", new Cars());
+        modelAndView.setViewName("emp/empform");
+        return modelAndView;
+
+    }
+
     @RequestMapping(value = "/save_emp")
     public ModelAndView save(@ModelAttribute(value = "employees") Employees employees) {
         if (employees.getId() == 0) {
             System.out.println("Adding a new emp");
-            employeeDao.saveEmployee(employees);
-//            employees.setId(list.size() + 1);
-//            list.add(employees);
+            hibernateDao.saveDB(employees);
+            employees.setId(listEmployees.size() + 1);
+            listEmployees.add(employees);
         } else {
-            employeeDao.updateEmployees(employees);
+            hibernateDao.updateEmployees(employees);
+            listEmployees.set(employees.getId(),employees);
 
         }
         return new ModelAndView("redirect:/viewemp");
     }
 
+
+    @RequestMapping(value = "/save_car")
+    public ModelAndView save(@ModelAttribute(value = "cars") Cars cars) {
+        if (cars.getId() == 0) {
+            System.out.println("Adding a new emp");
+            hibernateDao.saveDB(cars);
+            cars.setId(listCars.size() + 1);
+            listCars.add(cars);
+        } else {
+            hibernateDao.updateEmployees(cars);
+
+        }
+        return new ModelAndView("redirect:/viewcars");
+    }
 
 
 //    @RequestMapping(value = "/delete_emp", method = RequestMethod.POST)
@@ -62,7 +100,10 @@ public class EmpController {
 //        list.remove(getEmployeesById(Integer.parseInt(emp_id)));
         int i= Integer.parseInt(emp_id);
       //  Employees employees = getEmployeesById(i);
-        employeeDao.deleteEmployee(getEmployeesById(i));
+//        try {
+//            hibernateDao.deleteEmployee(getEmployeesById(i));
+//        }catch ()
+        hibernateDao.deleteEmployee(getEmployeesById(i));
 
         return new ModelAndView("redirect:/viewemp");
     }
@@ -76,6 +117,21 @@ public class EmpController {
         return new ModelAndView("emp/empform", "employees", employees);
     }
 
+    @RequestMapping(value = "edit_cars")
+    public ModelAndView edit1(@RequestParam(value = "cars_id") String id) {
+
+        ModelAndView modelAndView = new ModelAndView();
+        int i= Integer.parseInt(id);
+        Cars cars = getCarsById(i);
+//        List<Employees> list2 = hibernateDao.getEmployees();
+        modelAndView.addObject("employeesList", listEmployees);
+        modelAndView.addObject("cars", listCars);
+        modelAndView.setViewName("emp/carform");
+
+
+        return modelAndView;
+    }
+
 
 
 /*    @RequestMapping(value = "/test", method = RequestMethod.POST)
@@ -86,14 +142,27 @@ public class EmpController {
 
     @RequestMapping("/viewemp")
     public ModelAndView viewemp(Model model) {
-       List <Employees>  list1 = new ArrayList<>();
-        list1 = employeeDao.getEmployees();
-        return new ModelAndView("emp/viewemp", "list", list1);
+//       List <Employees>  list1 = new ArrayList<>();
+//        list1 = hibernateDao.getEmployees();
+        return new ModelAndView("emp/viewemp", "list", listEmployees);
+    }
+
+    @RequestMapping("/viewcar")
+    public ModelAndView viewcar(Model model) {
+//        hibernateDao = new HibernateDao();
+//        List<Cars> list2 = hibernateDao.getCars();
+        return new ModelAndView("emp/viewcar", "list", listCars);
     }
 
     private Employees getEmployeesById(@RequestParam int id) {
-        List<Employees> listEmp = new ArrayList<>();
-        listEmp = employeeDao.getEmployees();
-        return listEmp.stream().filter(f -> f.getId() == id).findFirst().get();
+//        List<Employees> listEmp = new ArrayList<>();
+//        listEmp = hibernateDao.getEmployees();
+        return listEmployees.stream().filter(f -> f.getId() == id).findFirst().get();
+    }
+
+    private Cars getCarsById(@RequestParam int id) {
+//        List<Cars> listCar = new ArrayList<>();
+//        listCar = hibernateDao.getCars();
+        return listCars.stream().filter(f -> f.getId() == id).findFirst().get();
     }
 }

@@ -1,20 +1,18 @@
 package spring.hibernate;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.Set;
 
 @Entity
 @Table(name = "Employees")
 @Data
 @RequiredArgsConstructor
 @AllArgsConstructor
-public class Employees {
+public class Employees implements HibernateEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -58,8 +56,11 @@ public class Employees {
     @NonNull
     private String email;
 
+    @OneToMany(mappedBy = "employees", orphanRemoval = true, fetch = FetchType.EAGER)
+    @ToString.Exclude
+    private Set<Cars> cars;
+
     public Employees() {
     }
-
 
 }
